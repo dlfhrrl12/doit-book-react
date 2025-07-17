@@ -1,8 +1,13 @@
+import * as D from './data';
+
 function App() {
-  console.log('App called');
   return (
     <div>
-      <h1 className="text-blue-600">Hello React</h1>
+      <p>
+        {D.randomName()}, {D.randomJobTitle()}, {D.randomDayMonthYear()}
+      </p>
+      <img src={D.randomAvatar()} height="50" />
+      <img src={D.randomImage()} height="300" />
     </div>
   );
 }
