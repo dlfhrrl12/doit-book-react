@@ -1,4 +1,4 @@
-import { useDate, useTodos } from '../../../hooks/useContext';
+import { useDate, useTodos } from '../../hooks/useContext';
 
 const getMonthDays = (year: number, month: number) => {
   const days: (number | null)[] = [];
@@ -52,37 +52,44 @@ const CalendarContent = () => {
   };
 
   return (
-    <section className=" bg-white border rounded-[1.5rem] h-[95%] overflow-hidden">
-      <div className=" gird grid-cols-7 h-full">
+    <section className="bg-white border rounded-3xl h-[95%] overflow-hidden shadow-lg">
+      {' '}
+      {/* rounded-[1.5rem] -> rounded-3xl (Tailwind 기본값), shadow 추가 */}
+      <div className="grid grid-cols-7 h-full">
+        {' '}
+        {/* 'gird' 오타 수정: grid */}
         {weekdayHeaders.map((header) => (
           <div
             key={header}
-            className="pt-[0.625rem] text-center font-bold flex justify-center items-center"
+            className="p-2.5 text-center font-bold flex justify-center items-center text-gray-600 border-b border-gray-200" // pt-[0.625rem] -> p-2.5 (상하좌우), 색상 및 테두리 추가
           >
             {header}
           </div>
         ))}
         {days.map((day, index) => {
           const dayStatus = day ? getTodoStatus(year, month, day) : '';
-          const isSelected = day !== null && day === today;
+          // 오늘 날짜와 현재 day가 같고, 같은 월에 있는지 확인
+          const isSelected =
+            day !== null &&
+            day === today &&
+            currentDate.getFullYear() === year &&
+            currentDate.getMonth() === month;
+
           const dayClasses = `
-            relative p-2.5 flex justify-center items-center overflow-hidden
+            relative p-2.5 flex justify-center items-center text-gray-800 text-lg
+            ${day ? 'cursor-pointer hover:bg-blue-100' : 'text-gray-400'}
             ${
-              day ? 'cursor-pointer hover:bg-accent' : ''
-            } // day가 null이 아닐 때만 커서 및 호버 적용
-            ${isSelected ? 'bg-accent' : ''} // 선택된 날짜에만 적용
-            ${
-              dayStatus === 'doing' ? 'doing' : ''
-            } // doing 상태 클래스 (::after용)
-            ${
-              dayStatus === 'done' ? 'done' : ''
-            }   // done 상태 클래스 (::after용)
+              isSelected ? 'bg-accent font-bold rounded-full text-red-500' : ''
+            } // 문제의 원인
+            ${dayStatus === 'doing' ? 'doing' : ''}
+            ${dayStatus === 'done' ? 'done' : ''}
           `;
+
           return (
             <div
               onClick={() => handleDateClick(day)}
               key={index}
-              className={dayClasses}
+              className={`${dayClasses} text-gray-800`}
             >
               {day || ''}
             </div>
